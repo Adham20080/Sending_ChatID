@@ -10,14 +10,21 @@ from buttons import keyboard
 db = Database("users.db")
 dp = Dispatcher()
 
+data = []
+
 
 @dp.message(CommandStart())
 async def start(message: Message):
-    db.add_user(message.from_user.id, message.from_user.full_name)
-    if message.from_user.id == ADMIN_ID:
-        await message.answer("Hello", reply_markup=keyboard)
+    for user in db.all_userid():
+        data.append(user[0])
+    if message.from_user.id in data:
+        if message.from_user.id == ADMIN_ID:
+            await message.answer("Hello admin!", reply_markup=keyboard)
+        elif message.from_user.id != ADMIN_ID:
+            await message.answer("siz avval botga start bosgansiz!")
+
     else:
-        await message.answer("Hello")
+        db.add_user(message.from_user.id, message.from_user.full_name)
 
 
 @dp.message(F.text == "Chat users")
