@@ -1,11 +1,11 @@
-import asyncio
-import logging
+from aiogram.filters.command import CommandStart
 from aiogram import Bot, Dispatcher, F
 from aiogram.types import Message
-from aiogram.filters.command import Command, CommandStart
-from db import Database
 from root import TOKEN, ADMIN_ID
 from buttons import keyboard
+from db import Database
+import asyncio
+import logging
 
 db = Database("users.db")
 dp = Dispatcher()
@@ -21,7 +21,7 @@ async def start(message: Message):
         if message.from_user.id == ADMIN_ID:
             await message.answer("Hello admin!", reply_markup=keyboard)
         elif message.from_user.id != ADMIN_ID:
-            await message.answer("siz avval botga start bosgansiz!")
+            await message.answer("siz avval botga start bosgansiz!")  # noqa
 
     else:
         db.add_user(message.from_user.id, message.from_user.full_name)
@@ -30,7 +30,15 @@ async def start(message: Message):
 @dp.message(F.text == "Chat users")
 async def chat_users(message: Message, bot: Bot):
     for user in db.all_userid():
-        await bot.send_message(chat_id=user[0], text="Hello User!")
+        await bot.send_message(chat_id=user[0], text="https://youtu.be/PZUr2YyYmFY?si=VjFwawHEPHbzkxri")
+
+
+@dp.message(F.text == "Bot users")
+async def bot_users(message: Message):
+    count = 0
+    for user in db.all_userid():
+        count += 1
+    await message.answer(f"👩‍💼 Bot Users: {count} ")
 
 
 async def main() -> None:
